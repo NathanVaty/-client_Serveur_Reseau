@@ -36,6 +36,8 @@ public class Client {
             fluxEntrant =  new BufferedReader(new InputStreamReader(
                                                   echoSocket.getInputStream()));
             serverName = echoSocket.getInetAddress().getHostName();
+            System.out.println("Connexion au serveur : " + serverName);
+             
         } catch(UnknownHostException e){
             System.out.println("Destination unknow" + nomMachineDistance);
             System.exit(-1);
@@ -45,30 +47,39 @@ public class Client {
             System.exit(-1);
         }
        
-        // saisie
         Scanner entree = new Scanner(System.in);
-        String userInput;
-        
+        String userInput = "";
+        boolean running = true;
+        String messServ = "";
         // On effectue la saisie sur le flux d'entré 
-        try {
-            // Tant que le serveur n'a pas répondu on attend <= saisie user
-            while ((userInput = entree.nextLine()) != null){
+        try {     
+            while(running){
+                userInput = entree.nextLine();
                 fluxSortant.println(userInput);
-                System.out.println("from " + serverName + 
-                                                " : " + fluxEntrant.readLine());
+                messServ = fluxEntrant.readLine();
+                // On affiche le message du serveur
+                System.out.println("from " + serverName + " : " + messServ);
+                // Si le serveur renvoie bye on arrete la connexion
+                if (messServ.equals("bye")){
+                    running = false;
+                } else {
+                    // Si l'utilisateur saisie le message bye on ferme la connexion
+                    if (userInput.equals("bye")){
+                        running = false;
+                    }                        
+                }
             }
         } catch (IOException e){
-            System.out.println("Now to investigate this I/O issue to" 
+                System.out.println("Now to investigate this I/O issue to" 
                                                           + nomMachineDistance);
             System.exit(-1);
-        }
-        // On récupere le message du serveur
-        
-        
+        } catch (Exception ex){
+            System.out.println("Fermeture de la connexion au serveur");
+        }   
         // On ferme la connexion et les différents flux ouvert
-       fluxEntrant.close();
-       fluxSortant.close();
-       echoSocket.close();
+        fluxEntrant.close();
+        fluxSortant.close();
+        echoSocket.close();
     }
 }
 
