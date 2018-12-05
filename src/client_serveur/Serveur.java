@@ -23,9 +23,8 @@ public class Serveur {
         ServerSocket serverSocket = null;
         Socket clientSocket = null;
         
-                BufferedReader fluxEntree = new BufferedReader(new InputStreamReader(
-                                            clientSocket.getInputStream()));
-                PrintWriter fluxSortie = new PrintWriter(clientSocket.getOutputStream(),true);
+                BufferedReader fluxEntree;
+                PrintWriter fluxSortie; 
                 BufferedReader stdOut = new BufferedReader(new InputStreamReader(
                                            System.in));
             
@@ -37,24 +36,59 @@ public class Serveur {
         }
         
         try {
-            while(true){
-                clientSocket = serverSocket.accept();
+            boolean running = true;
+            clientSocket = serverSocket.accept();
                 String hostName = clientSocket.getInetAddress().getHostName();
-                System.out.println(hostName);
-                System.out.println("from: " + hostName + ": " + fluxEntree.readLine());
-                String servInput;
-                while ((servInput = stdOut.readLine()) != null) {
+                 fluxSortie = new PrintWriter(clientSocket.getOutputStream(),true);
+                 fluxEntree = new BufferedReader(new InputStreamReader(
+                                            clientSocket.getInputStream()));
+                System.out.println("Connexion de: " + hostName);
+                 String servInput;
+                 String messageEntrant;
+                
+            while(running){
+                messageEntrant = fluxEntree.readLine();
+                System.out.println("from: " + hostName + ": " + messageEntrant);
+                if(messageEntrant.equals("bye")) {
+                     running = false;
+                } else {
+                     servInput = stdOut.readLine();
                     fluxSortie.println(servInput);
-                    
-                }
+                    if (servInput.equals("bye")) {
+                             running = false;           
+                         }
+                }   
             }
-            
+             clientSocket.close();
+             serverSocket.close();
         } catch(IOException e) {
             System.out.println("Accept failed on port 4444");
             System.exit(-1);
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
