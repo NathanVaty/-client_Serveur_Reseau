@@ -151,7 +151,7 @@ public class Client {
                                   + crypte.decrypter(messServ, cleCrypte));
                 
                 // Si le serveur renvoie bye on arrete la connexion
-                if (messServ.equals("bye")){
+                if (crypte.decrypter(messServ, cleCrypte).equals("bye")){
                     running = false;
                 } else {
                     // Si l'utilisateur saisie le message bye on ferme la connexion
