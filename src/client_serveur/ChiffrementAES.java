@@ -75,7 +75,7 @@ public class ChiffrementAES {
     }
     public String decrypter(String aDecrypter, String cle) {
         try {
-            byte[] data;
+            //byte[] data;
             byte[] result;
             byte[] original;
             Cipher cipher = Cipher.getInstance("AES");
@@ -83,9 +83,9 @@ public class ChiffrementAES {
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            data = aDecrypter.getBytes("UTF-8");
-            byte[] base64 = Base64.decodeBase64(aDecrypter.getBytes());
-            result = cipher.doFinal(base64);
+            //data = aDecrypter.getBytes("UTF-8");
+            byte[] decodedValue = new Base64().decode(aDecrypter.getBytes());
+            result = cipher.doFinal(decodedValue);
             original = cipher.doFinal(result);
             return new String(original);
         } catch (NoSuchAlgorithmException e) {
@@ -122,6 +122,7 @@ public class ChiffrementAES {
 //        }
     }
 }
+
 
 
 
