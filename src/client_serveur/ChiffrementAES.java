@@ -86,7 +86,8 @@ public class ChiffrementAES {
             cipher.init(Cipher.DECRYPT_MODE, key);
             //data = aDecrypter.getBytes("UTF-8");
             byte[] decodedValue = new Base64().decode(aDecrypter.getBytes("UTF-8"));
-            result = cipher.doFinal(decodedValue);
+            result = new Base64().decode(cipher.doFinal(decodedValue));
+            //result = cipher.doFinal(decodedValue);
             original = cipher.doFinal(result);
             return new String(original);
         } catch (NoSuchAlgorithmException e) {
@@ -123,6 +124,7 @@ public class ChiffrementAES {
 //        }
     }
 }
+
 
 
 
