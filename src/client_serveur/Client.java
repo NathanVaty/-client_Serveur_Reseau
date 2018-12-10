@@ -19,19 +19,33 @@ import java.util.Scanner;
  * @author Nathan Vaty
  */
 public class Client {
+    // main => methode
     public static void main(String[] args) throws IOException{    
         // variable locale
         Socket echoSocket = null;
         PrintWriter fluxSortant = null; // Flux de sortie
         BufferedReader fluxEntrant = null; //Flux d'entrée
-        String nomMachineDistance = "192.168.1.48"; // TODO Utiliser une méthode du serveur pour récuperer les noms
-        int numPortDistance = 4444;
+        Scanner entree = new Scanner(System.in);
+        // Une saisie  ip interactive
+        String ipServer = ""; // TODO Utiliser une méthode du serveur pour récuperer les noms
+        int numPortServer; // valeur saisie par l'utilisateur => port du serveur
         String serverName = ""; // Nom du serveur
+        
+        // L'utilisateur saisie l'ip et le port du serveur
+        System.out.println("Bonjour ! Veuilez saisir l'ip de votre serveur");
+        System.out.print("ip du serveur : ");
+        ipServer = entree.next();
+        System.out.println("Veuillez saisir le port d'écoute du serveur"
+                         + " (port défaut : 4444)");
+        System.out.print("Port du serveur : ");
+        numPortServer = entree.nextInt();
+        // On vide la mémoire tampon de la saisie
+        entree.nextLine();
         
         // Demande de connexion lors de la création d'une socket et création
         // des flux d'entrés/sortie
         try {
-            echoSocket = new Socket(nomMachineDistance, numPortDistance);
+            echoSocket = new Socket(ipServer, numPortServer);
             fluxSortant = new PrintWriter(echoSocket.getOutputStream(), true);
             fluxEntrant =  new BufferedReader(new InputStreamReader(
                                                   echoSocket.getInputStream()));
@@ -39,15 +53,15 @@ public class Client {
             System.out.println("Connexion au serveur : " + serverName);
              
         } catch(UnknownHostException e){
-            System.out.println("Destination unknow" + nomMachineDistance);
+            System.out.println("Destination unknow" + ipServer);
             System.exit(-1);
         } catch(IOException e){
             System.out.println("Now to investigate this I/O issue to" 
-                                                          + nomMachineDistance);
+                                                          + ipServer);
             System.exit(-1);
         }
        
-        Scanner entree = new Scanner(System.in);
+        
         String userInput = "";
         boolean running = true;
         String messServ = "";
@@ -71,7 +85,7 @@ public class Client {
             }
         } catch (IOException e){
                 System.out.println("Now to investigate this I/O issue to" 
-                                                          + nomMachineDistance);
+                                                          + ipServer);
             System.exit(-1);
         } catch (Exception ex){
             System.out.println("Fermeture de la connexion au serveur");

@@ -27,9 +27,12 @@ public class Serveur {
                 PrintWriter fluxSortie; 
                 BufferedReader stdOut = new BufferedReader(new InputStreamReader(
                                            System.in));
-            
+                
+        // Valeur par défaut de l'écoute du port        
+        int portListen=4444;
+        
         try {
-            serverSocket = new ServerSocket(4444);
+            serverSocket = new ServerSocket(portListen);
         } catch (IOException e) {
             System.out.println();
             System.exit(-1);
