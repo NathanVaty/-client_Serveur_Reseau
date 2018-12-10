@@ -80,10 +80,9 @@ public class ChiffrementAES {
             byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes());
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
-            
+            cipher.init(Cipher.DECRYPT_MODE, key);
             data = aDecrypter.getBytes();
             result = cipher.doFinal(data);
-            cipher.init(Cipher.DECRYPT_MODE, key);
             original = cipher.doFinal(result);
             return new String(original);
         } catch (NoSuchAlgorithmException e) {
@@ -120,6 +119,7 @@ public class ChiffrementAES {
 //        }
     }
 }
+
 
 
 
