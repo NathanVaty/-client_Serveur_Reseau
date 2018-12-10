@@ -30,6 +30,12 @@ public class ChiffrementAES {
         
     }
     
+    /**
+     * Permet de crypter notre message à l'aide de la clef
+     * @param aCrypter
+     * @param cle
+     * @return 
+     */
     public String cryptage(String aCrypter, String cle) {
         try {
             byte[] data;
@@ -53,18 +59,37 @@ public class ChiffrementAES {
         }
     }
     
+    /**
+     * Permet la generation de la cle
+     * @return
+     * @throws NoSuchAlgorithmException 
+     */
     public String generateCle() throws NoSuchAlgorithmException {
         KeyGenerator kg = KeyGenerator.getInstance("AES");
             Key key = kg.generateKey();
             String textFromKey = Base64.getEncoder().encodeToString(key.getEncoded());
             return textFromKey;
     }
+    
+    /**
+     * permet d'exporter notre cle dans un fichier
+     * @param cle
+     * @param nomFichier
+     * @throws FileNotFoundException 
+     */
     public void exportFichier(String cle,String nomFichier) throws FileNotFoundException {
         try (PrintWriter fichier = new PrintWriter("fichiers/" + nomFichier+ ".txt")) {
             fichier.print(cle);
         }
     }
     
+    /**
+     * permet de recuperer la cle à partir d'un fichier
+     * @param nomFichier
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public String importFromFichier(String nomFichier) throws FileNotFoundException, IOException {
         FileReader fichier = new FileReader("fichiers/" + nomFichier+ ".txt");
         StringBuilder cle = new StringBuilder();
@@ -76,6 +101,13 @@ public class ChiffrementAES {
         fichier.close();
         return cle.toString();
     }
+    
+    /**
+     * Permet de decrypter un message
+     * @param aDecrypter
+     * @param cle
+     * @return 
+     */
     public String decrypter(String aDecrypter, String cle) {
         try {
             byte[] data;
@@ -98,75 +130,6 @@ public class ChiffrementAES {
             return "";
         }
     }
-    public static void main(String[] args) {
-//        // TODO Auto genrated method stub
-//        byte[] data;
-//        byte[] result;
-//        byte[] original;
-//        
-//        try {
-//            ChiffrementAES chiffre = new ChiffrementAES();
-//            chiffre.exportFichier("Salut toi", "test");
-//            KeyGenerator kg = KeyGenerator.getInstance("AES");
-//            Key key = kg.generateKey();
-//            Cipher cipher = Cipher.getInstance("AES");
-//            
-//            cipher.init(Cipher.ENCRYPT_MODE, key);
-//            data = "Hello World!".getBytes();
-//            result = cipher.doFinal(data);
-//            cipher.init(Cipher.DECRYPT_MODE, key);
-//            original = cipher.doFinal(result);
-//            System.out.println(chiffre.importFromFichier("test"));
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -52,22 +52,28 @@ public class Serveur {
             String servInput;
             String messageEntrant;
             String modeConnexion;
+            // Lecture du mode de connexion du client
             modeConnexion = fluxEntree.readLine();
             if (modeConnexion.equals("s")) {
+                // Fonctionnement en mode simple sans chiffrement
                 while(running){
+                    // Lecture du message du client
                     messageEntrant = fluxEntree.readLine();
                     System.out.println("from: " + hostName + ": " + messageEntrant);
                     if(messageEntrant.equals("bye")) {
                         running = false;
                     } else {
                         servInput = stdOut.readLine();
+                        // Envoie du message au client
                         fluxSortie.println(servInput);
                         if (servInput.equals("bye")) {
+                            // si j'envoie bye on arrete le serveur
                             running = false;
                         }
                     }
                 }
             } else {
+                // Fonctionnement en mode cryptage
                 ChiffrementAES aes = new ChiffrementAES();
                 try {
                     String clefPartagee = aes.importFromFichier("cleS");
@@ -93,7 +99,7 @@ public class Serveur {
                 }
             }
             
-            
+            // Fermeture des sockets
             clientSocket.close();
             serverSocket.close();
         } catch(IOException e) {
@@ -102,6 +108,9 @@ public class Serveur {
         }
     }
 }
+
+
+
 
 
 
