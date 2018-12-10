@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 /**
@@ -20,8 +21,7 @@ import java.util.Scanner;
  */
 public class Client {
     
-    Client(){
-        
+    Client(){   
     }
     
     // méthode de connexion avec chat simple
@@ -43,9 +43,9 @@ public class Client {
             fluxEntrant =  new BufferedReader(new InputStreamReader(
                                                   echoSocket.getInputStream()));
             serverName = echoSocket.getInetAddress().getHostName();
-            System.out.println("Connexion au serveur : " + serverName);
             // On envoie le choix du chat au serveur
             fluxSortant.println(choixChat);
+            System.out.println("Connexion au serveur : " + serverName);
         } catch(UnknownHostException e){
             System.out.println("Destination unknow" + ipServer);
             System.exit(-1);
@@ -59,6 +59,7 @@ public class Client {
         String userInput = "";
         boolean running = true;
         String messServ = "";
+        
         // On effectue la saisie sur le flux d'entré 
         try {
             while(running){
@@ -92,7 +93,8 @@ public class Client {
     
     // méthode de connexion avec chat crypté
     public void connexChatCrypte(String ipServer, int numPortServer, 
-                                           String choixChat) throws IOException{
+                                           String choixChat) throws IOException, 
+                                                       NoSuchAlgorithmException{
          // Saisie du clavier
         Scanner entree = new Scanner(System.in);
         // variable locale
@@ -102,18 +104,13 @@ public class Client {
         String serverName = ""; // Nom du serveur
         ChiffrementAES crypte = new ChiffrementAES(); // Message crypté
         String cleCrypte = "";
-
-        // On vérifie la clé de chiffrement
-        try {
-            cleCrypte = crypte.importFromFichier("cleC");
-        } catch (FileNotFoundException e){
-            System.out.println("Pas de clé existante");
-            crypte.exportFichier(ipServer, choixChat);
-            System.exit(-1);
-        }
+        
         // Demande de connexion lors de la création d'une socket et création
-        // des flux d'entrés/sortie
+        // des flux d'entrés/sortie  et verification de la clé
         try {
+            // on verifie la clé de chiffrement 
+            cleCrypte = crypte.importFromFichier("cleC");
+            
             echoSocket = new Socket(ipServer, numPortServer);
             fluxSortant = new PrintWriter(echoSocket.getOutputStream(), true);
             fluxEntrant =  new BufferedReader(new InputStreamReader(
@@ -125,11 +122,15 @@ public class Client {
         } catch(UnknownHostException e){
             System.out.println("Destination unknow" + ipServer);
             System.exit(-1);
+        } catch (FileNotFoundException e){
+            System.out.println("Pas de clé existante donc generation d'une cle");
+            crypte.exportFichier(crypte.generateCle(), "cleC");
+            System.exit(-1);
         } catch(IOException e){
             System.out.println("Now to investigate this I/O issue to" 
                                                           + ipServer);
             System.exit(-1);
-        }
+        } 
        
         
         String userInput = "";
@@ -172,7 +173,7 @@ public class Client {
         echoSocket.close();
     }
     
-    public static void main(String[] args) throws IOException{    
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException{    
         // Saisie du clavier
         Scanner entree = new Scanner(System.in);
         Client client = new Client();
@@ -213,7 +214,7 @@ public class Client {
                     System.out.println("Connexion a un chat crypte");
                     // On vide la mémoire tampon de la saisie
                     entree.nextLine();
-                    client.connexChatSimple(ipServer,numPortServer,choixChat);
+                    client.connexChatCrypte(ipServer,numPortServer,choixChat);
                     break;
                 default:
                     System.out.println("Saisie incorrecte veuillez recommencer");
