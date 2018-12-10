@@ -14,10 +14,11 @@ import static java.lang.Byte.decode;
 import static java.lang.Integer.decode;
 import javax.crypto.*;
 import java.security.*;
+import java.util.Base64;
 
 
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Base64;
+
 
 /**
  *
@@ -34,12 +35,12 @@ public class ChiffrementAES {
             byte[] data;
             byte[] result;
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] decodedKey = Base64.decodeBase64(cle.getBytes("UTF-8"));
+            byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes("UTF-8"));
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] toEncode = new Base64().encode(aCrypter.getBytes("UTF-8"));
+            byte[] toEncode = Base64.getEncoder().encode(aCrypter.getBytes("UTF-8"));
             result = cipher.doFinal(toEncode);
             return new String(result);
         } catch (NoSuchAlgorithmException e) {
@@ -54,7 +55,7 @@ public class ChiffrementAES {
     public String generateCle() throws NoSuchAlgorithmException {
         KeyGenerator kg = KeyGenerator.getInstance("AES");
             Key key = kg.generateKey();
-            String textFromKey = Base64.encodeBase64String((key.getEncoded()));
+            String textFromKey = Base64.getEncoder().encodeToString(key.getEncoded());
             return textFromKey;
     }
     public void exportFichier(String cle,String nomFichier) throws FileNotFoundException {
@@ -80,13 +81,12 @@ public class ChiffrementAES {
             byte[] result;
             byte[] original;
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] decodedKey = Base64.decodeBase64(cle.getBytes("UTF-8"));
+            byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes("UTF-8"));
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
             //data = aDecrypter.getBytes("UTF-8");
-            byte[] decodedValue = new Base64().decode(aDecrypter.getBytes("UTF-8"));
-            result = new Base64().decode(cipher.doFinal(decodedValue));
+            result = cipher.doFinal(Base64.getDecoder().decode(aDecrypter.getBytes("UTF-8")));
             //result = cipher.doFinal(decodedValue);
             original = cipher.doFinal(result);
             return new String(original);
@@ -124,6 +124,7 @@ public class ChiffrementAES {
 //        }
     }
 }
+
 
 
 
