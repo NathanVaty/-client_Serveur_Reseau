@@ -16,7 +16,6 @@ import javax.crypto.*;
 import java.security.*;
 import java.util.Base64;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
