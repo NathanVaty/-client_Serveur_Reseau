@@ -70,7 +70,7 @@ public class Serveur {
             } else {
                 ChiffrementAES aes = new ChiffrementAES();
                 try {
-                    String clefPartagee = aes.importFromFichier("clefS");
+                    String clefPartagee = aes.importFromFichier("cleS");
                     while(running){
                     messageEntrant = fluxEntree.readLine();
                     System.out.println("Message chiffré");
@@ -102,6 +102,7 @@ public class Serveur {
         }
     }
 }
+
 
 
 
