@@ -9,8 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.Byte.decode;
+import static java.lang.Integer.decode;
 import javax.crypto.*;
 import java.security.*;
+import java.util.Base64;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -22,14 +26,14 @@ public class ChiffrementAES {
         
     }
     
-    public String cryptage(String aCrypter) {
+    public String cryptage(String aCrypter, String cle) {
         try {
             byte[] data;
             byte[] result;
-            
-            KeyGenerator kg = KeyGenerator.getInstance("AES");
-            Key key = kg.generateKey();
             Cipher cipher = Cipher.getInstance("AES");
+            byte[] decodedKey = Base64.getDecoder().decode(cle);
+            Key key = new SecretKeySpec(decodedKey, 0,
+             decodedKey.length, "AES");
             
             cipher.init(Cipher.ENCRYPT_MODE, key);
             data = aCrypter.getBytes();
@@ -71,9 +75,10 @@ public class ChiffrementAES {
             byte[] data;
             byte[] result;
             byte[] original;
-            KeyGenerator kg = KeyGenerator.getInstance(cle);
-            Key key = kg.generateKey();
-            Cipher cipher = Cipher.getInstance(cle);
+            Cipher cipher = Cipher.getInstance("AES");
+            byte[] decodedKey = Base64.getDecoder().decode(cle);
+            Key key = new SecretKeySpec(decodedKey, 0,
+             decodedKey.length, "AES");
             
             data = aDecrypter.getBytes();
             result = cipher.doFinal(data);
@@ -114,6 +119,8 @@ public class ChiffrementAES {
 //        }
     }
 }
+
+
 
 
 
