@@ -141,7 +141,7 @@ public class Client {
             while(running){
                 userInput = entree.nextLine();
                 // On envoie un message crypté au serveur a travers le fluxSortant
-                fluxSortant.println(crypte.cryptage(userInput));
+                fluxSortant.println(crypte.cryptage(userInput,cleCrypte));
                 messServ = fluxEntrant.readLine();
                 // On affiche le message du serveur en version crypté
                 System.out.println("Message crypte "
