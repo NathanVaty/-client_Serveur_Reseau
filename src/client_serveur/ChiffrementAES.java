@@ -31,7 +31,7 @@ public class ChiffrementAES {
             byte[] data;
             byte[] result;
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] decodedKey = Base64.getDecoder().decode(cle);
+            byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes());
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             
@@ -76,7 +76,7 @@ public class ChiffrementAES {
             byte[] result;
             byte[] original;
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] decodedKey = Base64.getDecoder().decode(cle);
+            byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes());
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             
@@ -119,6 +119,8 @@ public class ChiffrementAES {
 //        }
     }
 }
+
+
 
 
 
