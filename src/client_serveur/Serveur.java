@@ -6,29 +6,32 @@
 package client_serveur;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  *
  * @author Nathan Vaty
  */
 public class Serveur {
+    
+    public void chatSimple() {
+        
+    }
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         Socket clientSocket = null;
         
-                BufferedReader fluxEntree;
-                PrintWriter fluxSortie; 
-                BufferedReader stdOut = new BufferedReader(new InputStreamReader(
-                                           System.in));
-                
-        // Valeur par défaut de l'écoute du port        
+        BufferedReader fluxEntree;
+        PrintWriter fluxSortie;
+        BufferedReader stdOut = new BufferedReader(new InputStreamReader(
+                System.in));
+        
+        // Valeur par défaut de l'écoute du port
         int portListen=4444;
         
         try {
@@ -48,20 +51,49 @@ public class Serveur {
             System.out.println("Connexion de: " + hostName);
             String servInput;
             String messageEntrant;
-            
-            while(running){
-                messageEntrant = fluxEntree.readLine();
-                System.out.println("from: " + hostName + ": " + messageEntrant);
-                if(messageEntrant.equals("bye")) {
-                    running = false;
-                } else {
-                    servInput = stdOut.readLine();
-                    fluxSortie.println(servInput);
-                    if (servInput.equals("bye")) {
+            String modeConnexion;
+            modeConnexion = fluxEntree.readLine();
+            if (modeConnexion.equals("s")) {
+                while(running){
+                    messageEntrant = fluxEntree.readLine();
+                    System.out.println("from: " + hostName + ": " + messageEntrant);
+                    if(messageEntrant.equals("bye")) {
                         running = false;
+                    } else {
+                        servInput = stdOut.readLine();
+                        fluxSortie.println(servInput);
+                        if (servInput.equals("bye")) {
+                            running = false;
+                        }
                     }
                 }
+            } else {
+                ChiffrementAES aes = new ChiffrementAES();
+                try {
+                    String clefPartagee = aes.importFromFichier("clefS");
+                    while(running){
+                    messageEntrant = fluxEntree.readLine();
+                    System.out.println("Message chiffré");
+                    System.out.println("from: " + hostName + ": " + messageEntrant);
+                    System.out.println("Message déchiffré");
+                    System.out.println("from: " + hostName + ": " + aes.decrypter(messageEntrant, clefPartagee));
+                    if(aes.decrypter(messageEntrant, clefPartagee).equals("bye")) {
+                        running = false;
+                    } else {
+                        servInput = stdOut.readLine();
+                        fluxSortie.println(aes.cryptage(servInput));
+                        if (servInput.equals("bye")) {
+                            running = false;
+                        }
+                    }
+                }    
+                } catch(FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.out.println("Pas de clef partagée");
+                }
             }
+            
+            
             clientSocket.close();
             serverSocket.close();
         } catch(IOException e) {
@@ -70,4 +102,9 @@ public class Serveur {
         }
     }
 }
+
+
+
+
+
 

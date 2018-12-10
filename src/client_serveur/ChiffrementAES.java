@@ -44,6 +44,11 @@ public class ChiffrementAES {
         }
     }
     
+    public String generateCle() throws NoSuchAlgorithmException {
+        KeyGenerator kg = KeyGenerator.getInstance("AES");
+            Key key = kg.generateKey();
+            return key.toString();
+    }
     public void exportFichier(String cle,String nomFichier) throws FileNotFoundException {
         try (PrintWriter fichier = new PrintWriter("fichiers/" + nomFichier+ ".txt")) {
             fichier.print(cle);
@@ -109,6 +114,7 @@ public class ChiffrementAES {
 //        }
     }
 }
+
 
 
 
