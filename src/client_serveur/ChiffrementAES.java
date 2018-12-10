@@ -14,7 +14,7 @@ import static java.lang.Byte.decode;
 import static java.lang.Integer.decode;
 import javax.crypto.*;
 import java.security.*;
-import java.util.Base64;
+
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -32,7 +32,7 @@ public class ChiffrementAES {
             byte[] data;
             byte[] result;
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes());
+            byte[] decodedKey = Base64.decodeBase64(cle.getBytes());
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             
@@ -52,7 +52,7 @@ public class ChiffrementAES {
     public String generateCle() throws NoSuchAlgorithmException {
         KeyGenerator kg = KeyGenerator.getInstance("AES");
             Key key = kg.generateKey();
-            String textFromKey = Base64.getEncoder().encodeToString(key.getEncoded());
+            String textFromKey = Base64.encodeBase64String((key.getEncoded()));
             return textFromKey;
     }
     public void exportFichier(String cle,String nomFichier) throws FileNotFoundException {
@@ -78,12 +78,12 @@ public class ChiffrementAES {
             byte[] result;
             byte[] original;
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] decodedKey = Base64.getDecoder().decode(cle.getBytes());
+            byte[] decodedKey = Base64.decodeBase64(cle.getBytes());
             Key key = new SecretKeySpec(decodedKey, 0,
              decodedKey.length, "AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
             data = aDecrypter.getBytes("UTF-8");
-            //byte[] base64decodedTokenArr = Base64.decodeBase64(aDecrypter.getBytes());
+            byte[] base64decodedTokenArr = Base64.decodeBase64(aDecrypter.getBytes());
             result = cipher.doFinal(data);
             original = cipher.doFinal(result);
             return new String(original);
@@ -121,6 +121,7 @@ public class ChiffrementAES {
 //        }
     }
 }
+
 
 
 
