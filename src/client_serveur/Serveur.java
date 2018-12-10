@@ -81,7 +81,7 @@ public class Serveur {
                         running = false;
                     } else {
                         servInput = stdOut.readLine();
-                        fluxSortie.println(aes.cryptage(servInput));
+                        fluxSortie.println(aes.cryptage(servInput,clefPartagee));
                         if (servInput.equals("bye")) {
                             running = false;
                         }
@@ -102,6 +102,7 @@ public class Serveur {
         }
     }
 }
+
 
 
 
